@@ -14,25 +14,27 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SmsService {
 
+    private final SaleService saleService;
     @Value("${twilio.sid}")
     private String twilioSid;
-
     @Value("${twilio.key}")
     private String twilioKey;
-
     @Value("${twilio.phone.from}")
     private String twilioPhoneFrom;
-
     @Value("${twilio.phone.to}")
     private String twilioPhoneTo;
-
-    private final SaleService saleService;
 
     public void sendSms(Long saleId) {
 
         Sale sale = saleService.findById(saleId);
-        String msg = "Vendedor " + sale.getName() + " foi destaque em " + sale.getDate()
-                + " com um total de R$" + String.format("%.2f", sale.getAmount());
+
+        String msg = """
+                Vendedor %s foi destaque em %s com um total de R$%s
+                """.formatted(
+                sale.getName(),
+                sale.getDate().toString(),
+                String.format("%.2f", sale.getAmount())
+        );
 
         Twilio.init(twilioSid, twilioKey);
 

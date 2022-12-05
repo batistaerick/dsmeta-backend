@@ -20,10 +20,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
         try {
-            http.headers().frameOptions().disable();
-            http.cors().and().csrf().disable();
-            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-            return http.authorizeHttpRequests(authorization -> authorization.anyRequest().permitAll()).build();
+            return http
+                    .headers()
+                    .frameOptions()
+                    .disable()
+                    .and()
+                    .cors()
+                    .and()
+                    .csrf()
+                    .disable()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeHttpRequests(authorization -> authorization
+                            .anyRequest()
+                            .permitAll())
+                    .build();
         } catch (Exception e) {
             throw new SaleException(e);
         }
